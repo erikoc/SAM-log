@@ -1,0 +1,46 @@
+{
+  "name": "sam-log",
+  "description": "Handles logging to console and to stackdriver",
+  "author": "Omnicar A/S",
+  "license": "MIT",
+  "files": ["dist"],
+  "main": "./dist/index.js",
+  "typings": "./dist/index.d.ts",
+  "dependencies": {
+    "@google-cloud/logging-winston": "^0.9.0",
+    "winston": "^2.4.3"
+  },
+  "devDependencies": {
+    "@types/jest": "^23.1.5",
+    "@types/winston": "^2.3.9",
+    "jest": "^23.4.0",
+    "ts-jest": "^23.0.0",
+    "tslib": "^1.9.3",
+    "typescript": "^2.9.2"
+  },
+  "scripts": {
+    "test": "jest",
+    "test-watch": "jest --watchAll",
+    "test-debug": "node --inspect node_modules/.bin/jest --watchAll",
+    "tsc": "node node_modules/typescript/bin/tsc -p ./tsconfig.json -w",
+    "tsc-once": "node node_modules/typescript/bin/tsc -p ./tsconfig.json"
+  },
+  "jest": {
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    },
+    "testRegex": "(/__tests__/.*|(\\.|/)(test|spec))\\.(ts)$",
+    "moduleFileExtensions": [
+      "ts",
+      "tsx",
+      "js",
+      "jsx",
+      "json",
+      "node"
+    ],
+    "automock": false,
+    "testPathIgnorePatterns": [
+      "./dist"
+    ]
+  }
+}
