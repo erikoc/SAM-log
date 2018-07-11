@@ -19,6 +19,12 @@ export interface ILogSettings {
   projectId?: string // Project id
 }
 
+export interface ILogInfo {
+  settings?: ILogSettings
+  prefix?: string
+  meta?: any | any[]
+}
+
 const allEnvironments: Environment[] = [
   'production',
   'staging',
@@ -63,6 +69,10 @@ let settingsInUse: ILogSettings | undefined
 export function clearLogSettings() {
   winstonClient = undefined
   settingsInUse = undefined
+}
+
+export function getCurrentLogSettings() {
+  return settingsInUse
 }
 
 /**
@@ -167,18 +177,20 @@ function processMessage(message: string | object, prefix: string = '') {
   return `${prefix}${message}`
 }
 
+const getLogInfo = (info?: ILogInfo) => {
+  const defaults = { settings: undefined, prefix: '', meta: undefined }
+  return info ? { ...defaults, ...info } : defaults
+}
+
 /**
  * Logs an error message. `errorlog` is a convenient and import-friendly alias
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export function logError(
-  message: string | object,
-  prefix: string = '',
-  meta?: any | any[],
-) {
-  const client = initLogger()
+export function logError(message: string | object, info?: ILogInfo) {
+  const { settings, prefix, meta } = getLogInfo(info)
+  const client = initLogger(settings || settingsInUse)
   client.error(processMessage(message, prefix), meta)
 }
 
@@ -188,12 +200,9 @@ export function logError(
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export function logWarn(
-  message: string | object,
-  prefix: string = '',
-  meta?: any | any[],
-) {
-  const client = initLogger()
+export function logWarn(message: string | object, info?: ILogInfo) {
+  const { settings, prefix, meta } = getLogInfo(info)
+  const client = initLogger(settings || settingsInUse)
   client.warn(processMessage(message, prefix), meta)
 }
 
@@ -203,12 +212,9 @@ export function logWarn(
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export function logInfo(
-  message: string | object,
-  prefix: string = '',
-  meta?: any | any[],
-) {
-  const client = initLogger()
+export function logInfo(message: string | object, info?: ILogInfo) {
+  const { settings, prefix, meta } = getLogInfo(info)
+  const client = initLogger(settings || settingsInUse)
   client.info(processMessage(message, prefix), meta)
 }
 
@@ -218,12 +224,9 @@ export function logInfo(
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export function logVerbose(
-  message: string | object,
-  prefix: string = '',
-  meta?: any | any[],
-) {
-  const client = initLogger()
+export function logVerbose(message: string | object, info?: ILogInfo) {
+  const { settings, prefix, meta } = getLogInfo(info)
+  const client = initLogger(settings || settingsInUse)
   client.verbose(processMessage(message, prefix), meta)
 }
 
@@ -233,11 +236,8 @@ export function logVerbose(
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export function logDebug(
-  message: string | object,
-  prefix: string = '',
-  meta?: any | any[],
-) {
-  const client = initLogger()
+export function logDebug(message: string | object, info?: ILogInfo) {
+  const { settings, prefix, meta } = getLogInfo(info)
+  const client = initLogger(settings || settingsInUse)
   client.debug(processMessage(message, prefix), meta)
 }

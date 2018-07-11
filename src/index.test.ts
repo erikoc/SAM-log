@@ -8,9 +8,18 @@ import {
   initLogger,
   logDebug,
   areSettingsEqual,
+  getCurrentLogSettings,
 } from './index'
 
 const clearEnv = () => (process.env = {})
+
+const validSettings: ILogSettings = {
+  level: 'silly',
+  useStackDriver: true,
+  useConsole: true,
+  keyFilename: 'test',
+  projectId: 'test',
+}
 
 beforeEach(() => {
   clearLogSettings()
@@ -18,14 +27,7 @@ beforeEach(() => {
 })
 describe('Log settings', () => {
   it('Returns the same valid settings it was given', () => {
-    const validSettings: Partial<ILogSettings> = {
-      level: 'silly',
-      useStackDriver: true,
-      useConsole: true,
-      keyFilename: 'test',
-      projectId: 'test',
-    }
-    const settings = getLogSettings(validSettings)
+    const settings = getLogSettings({ ...validSettings })
     expect(settings).toEqual(validSettings)
   })
   it('Returns modified settings when given invalid settings', () => {
@@ -54,7 +56,7 @@ describe('Log settings', () => {
     const settings = getLogSettings()
     expect(settings.level).toEqual('info')
     expect(settings.useConsole).toBeFalsy
-    expect(settings.useStackDriver).toBeTruthy
+    expect(settings.useStackDriver).toEqual(true)
   })
 })
 describe('Log initialization', () => {
@@ -72,10 +74,10 @@ describe('Log initialization', () => {
 describe('Settings equality', () => {
   it('Returns true for two undefined objects', () => {
     const equal = areSettingsEqual(undefined, undefined)
-    expect(equal).toBeTruthy
+    expect(equal).toEqual(true)
   })
   it('Returns false when only one object is undefined', () => {
-    const equal = areSettingsEqual({}, undefined)
+    const equal = areSettingsEqual({ ...validSettings }, undefined)
     expect(equal).toBeFalsy
   })
   it('Returns true when objects are alike', () => {
@@ -88,7 +90,7 @@ describe('Settings equality', () => {
     }
     const settingsB = { ...settingsA }
     const equal = areSettingsEqual(settingsA, settingsB)
-    expect(equal).toBeTruthy
+    expect(equal).toEqual(true)
   })
   it('Returns false when objects are not alike', () => {
     const settingsA: ILogSettings = {
@@ -144,4 +146,14 @@ describe('Logging methods (except for verbose)', () => {
     logDebug('This is a test')
     expect(spy).toHaveBeenCalledTimes(1)
   })
+  it('Verifies that settings are not affected by logging', () => {
+    const logger = initLogger({ useStackDriver: true })
+    const initialSettings = { ...getCurrentLogSettings() }
+    logDebug('This is a test')
+    const settingsAfterLogging = getCurrentLogSettings()
+    const equal = areSettingsEqual(initialSettings, settingsAfterLogging)
+    expect(equal).toEqual(true)
+  })
+  // @TODO: test settings passed to log functions
+  // @TODO: test replacement patterns
 })

@@ -45,6 +45,10 @@ function clearLogSettings() {
     settingsInUse = undefined;
 }
 exports.clearLogSettings = clearLogSettings;
+function getCurrentLogSettings() {
+    return settingsInUse;
+}
+exports.getCurrentLogSettings = getCurrentLogSettings;
 /**
  * Verifies if the two objects of ILogSettings type are deeply equal
  * @param a First settings object
@@ -125,15 +129,19 @@ function processMessage(message, prefix) {
     }
     return "" + prefix + message;
 }
+var getLogInfo = function (info) {
+    var defaults = { settings: undefined, prefix: '', meta: undefined };
+    return info ? tslib_1.__assign({}, defaults, info) : defaults;
+};
 /**
  * Logs an error message. `errorlog` is a convenient and import-friendly alias
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-function logError(message, prefix, meta) {
-    if (prefix === void 0) { prefix = ''; }
-    var client = initLogger();
+function logError(message, info) {
+    var _a = getLogInfo(info), settings = _a.settings, prefix = _a.prefix, meta = _a.meta;
+    var client = initLogger(settings || settingsInUse);
     client.error(processMessage(message, prefix), meta);
 }
 exports.logError = logError;
@@ -143,9 +151,9 @@ exports.logError = logError;
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-function logWarn(message, prefix, meta) {
-    if (prefix === void 0) { prefix = ''; }
-    var client = initLogger();
+function logWarn(message, info) {
+    var _a = getLogInfo(info), settings = _a.settings, prefix = _a.prefix, meta = _a.meta;
+    var client = initLogger(settings || settingsInUse);
     client.warn(processMessage(message, prefix), meta);
 }
 exports.logWarn = logWarn;
@@ -155,9 +163,9 @@ exports.logWarn = logWarn;
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-function logInfo(message, prefix, meta) {
-    if (prefix === void 0) { prefix = ''; }
-    var client = initLogger();
+function logInfo(message, info) {
+    var _a = getLogInfo(info), settings = _a.settings, prefix = _a.prefix, meta = _a.meta;
+    var client = initLogger(settings || settingsInUse);
     client.info(processMessage(message, prefix), meta);
 }
 exports.logInfo = logInfo;
@@ -167,9 +175,9 @@ exports.logInfo = logInfo;
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-function logVerbose(message, prefix, meta) {
-    if (prefix === void 0) { prefix = ''; }
-    var client = initLogger();
+function logVerbose(message, info) {
+    var _a = getLogInfo(info), settings = _a.settings, prefix = _a.prefix, meta = _a.meta;
+    var client = initLogger(settings || settingsInUse);
     client.verbose(processMessage(message, prefix), meta);
 }
 exports.logVerbose = logVerbose;
@@ -179,9 +187,9 @@ exports.logVerbose = logVerbose;
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-function logDebug(message, prefix, meta) {
-    if (prefix === void 0) { prefix = ''; }
-    var client = initLogger();
+function logDebug(message, info) {
+    var _a = getLogInfo(info), settings = _a.settings, prefix = _a.prefix, meta = _a.meta;
+    var client = initLogger(settings || settingsInUse);
     client.debug(processMessage(message, prefix), meta);
 }
 exports.logDebug = logDebug;

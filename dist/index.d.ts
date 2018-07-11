@@ -8,10 +8,16 @@ export interface ILogSettings {
     keyFilename?: string;
     projectId?: string;
 }
+export interface ILogInfo {
+    settings?: ILogSettings;
+    prefix?: string;
+    meta?: any | any[];
+}
 /**
  * Resets the winstonClient and settingsInUse - useful for tests
  */
 export declare function clearLogSettings(): void;
+export declare function getCurrentLogSettings(): ILogSettings | undefined;
 /**
  * Verifies if the two objects of ILogSettings type are deeply equal
  * @param a First settings object
@@ -30,32 +36,32 @@ export declare function initLogger(logSettings?: Partial<ILogSettings>): LoggerI
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export declare function logError(message: string | object, prefix?: string, meta?: any | any[]): void;
+export declare function logError(message: string | object, info?: ILogInfo): void;
 /**
  * Logs a warning message
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export declare function logWarn(message: string | object, prefix?: string, meta?: any | any[]): void;
+export declare function logWarn(message: string | object, info?: ILogInfo): void;
 /**
  * Logs an info message
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export declare function logInfo(message: string | object, prefix?: string, meta?: any | any[]): void;
+export declare function logInfo(message: string | object, info?: ILogInfo): void;
 /**
  * Logs a verbose message
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export declare function logVerbose(message: string | object, prefix?: string, meta?: any | any[]): void;
+export declare function logVerbose(message: string | object, info?: ILogInfo): void;
 /**
  * Logs a debug message. `bug` is a convenient and import-friendly alias
  * @param message The message to log
  * @param prefix A prefix to put in front of the log
  * @param meta Metadata to add to the log
  */
-export declare function logDebug(message: string | object, prefix?: string, meta?: any | any[]): void;
+export declare function logDebug(message: string | object, info?: ILogInfo): void;

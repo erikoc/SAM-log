@@ -10,11 +10,11 @@ To use the library, simply import the log function needed. E.g. `logError` and u
 
 It's possible to use an optional prefix for all the logging methods. The available logging methods are:
 
-* `logError(message: string | object, prefix: string = '', meta?: any | any[])`
-* `logWarn(message: string | object, prefix: string = '', meta?: any | any[])`
-* `logInfo(message: string | object, prefix: string = '', meta?: any | any[])`
-* `logVerbose(message: string | object, prefix: string = '', meta?: any | any[])`
-* `logDebug(message: string | object, prefix: string = '', meta?: any | any[])`
+* `logError(message: string | object, info?: ILogInfo)`
+* `logWarn(message: string | object, info?: ILogInfo)`
+* `logInfo(message: string | object, info?: ILogInfo)`
+* `logVerbose(message: string | object, info?: ILogInfo)`
+* `logDebug(message: string | object, info?: ILogInfo)`
 
 ## Developing
 
