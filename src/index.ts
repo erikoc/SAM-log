@@ -1,4 +1,5 @@
-import { Logger, transports, TransportInstance, LoggerInstance } from 'winston'
+import { transports, createLogger, Logger } from 'winston'
+import * as Transport from 'winston-transport'
 import { LoggingWinston } from '@google-cloud/logging-winston'
 
 // @TODO: Put types/interfaces in separate file
@@ -60,7 +61,7 @@ const defaultLogLevels: { [key in Environment]: Loglevel } = {
   default: 'debug',
 }
 
-let winstonClient: LoggerInstance | undefined
+let winstonClient: Logger | undefined
 let settingsInUse: ILogSettings | undefined
 
 /**
@@ -132,9 +133,7 @@ export function getLogSettings(
   }
 }
 
-export function initLogger(
-  logSettings?: Partial<ILogSettings>,
-): LoggerInstance {
+export function initLogger(logSettings?: Partial<ILogSettings>): Logger {
   // The existing client is returned if it exists and settings have not changed
   // or if the settings are undefined
   const settings = getLogSettings(logSettings)
@@ -142,13 +141,11 @@ export function initLogger(
     return winstonClient
   }
   const { level, useStackDriver, useConsole, keyFilename, projectId } = settings
-  const transportMethods: TransportInstance[] = []
+  const transportMethods: Transport[] = []
   if (useConsole) {
     transportMethods.push(
       new transports.Console({
         level,
-        colorize: 'all',
-        json: false,
         handleExceptions: true,
       }),
     )
@@ -162,7 +159,7 @@ export function initLogger(
       }),
     )
   }
-  winstonClient = new Logger({
+  winstonClient = createLogger({
     level,
     transports: transportMethods,
   })

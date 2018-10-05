@@ -3,3 +3,4 @@ src/
 .prettierrc
 tsconfig.json
 yarn.lock
+renovate.json
