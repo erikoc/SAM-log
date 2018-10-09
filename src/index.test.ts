@@ -9,6 +9,7 @@ import {
   logDebug,
   areSettingsEqual,
   getCurrentLogSettings,
+  processMessage,
 } from './index'
 
 const clearEnv = () => (process.env = {})
@@ -154,6 +155,18 @@ describe('Logging methods (except for verbose)', () => {
     // This requires the ignored code 2345 in ts-jest settings
     const equal = areSettingsEqual(initialSettings, settingsAfterLogging)
     expect(equal).toEqual(true)
+  })
+  it('Checks that an object is stringified correctly', () => {
+    const testObject = { test: 'object', value: 4, valid: true }
+    const processedMessage = processMessage(testObject)
+    expect(processedMessage).toEqual(JSON.stringify(testObject))
+  })
+  it('Prints an object without errors', () => {
+    const testObject = { test: 'object', value: 4, valid: true }
+    const logger = initLogger()
+    const spy = jest.spyOn(logger, 'log')
+    logDebug(testObject)
+    expect(spy).toHaveBeenCalledTimes(1)
   })
   // @TODO: test settings passed to log functions
   // @TODO: test replacement patterns
