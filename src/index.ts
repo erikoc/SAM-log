@@ -167,9 +167,9 @@ export function initLogger(logSettings?: Partial<ILogSettings>): Logger {
   return winstonClient
 }
 
-function processMessage(message: string | object, prefix: string = '') {
+export function processMessage(message: string | object, prefix: string = '') {
   if (typeof message === 'object') {
-    return `${prefix}${JSON.parse(JSON.stringify(message))}`
+    return `${prefix}${JSON.stringify(message)}`
   }
   return `${prefix}${message}`
 }
