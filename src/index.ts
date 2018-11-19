@@ -117,8 +117,8 @@ export function getLogSettings(
       logSettings && logSettings.level && isValidLoglevel(logSettings.level)
         ? logSettings.level
         : envLevel
-          ? envLevel
-          : defaultLogLevels[environment],
+        ? envLevel
+        : defaultLogLevels[environment],
     useStackDriver:
       logSettings && logSettings.useStackDriver !== undefined
         ? logSettings.useStackDriver
@@ -167,9 +167,24 @@ export function initLogger(logSettings?: Partial<ILogSettings>): Logger {
   return winstonClient
 }
 
+// See https://stackoverflow.com/questions/18391212/is-it-not-possible-to-stringify-an-error-using-json-stringify
+const replaceErrors = (_key: string, value: any) => {
+  if (value instanceof Error) {
+    const error: any = {}
+
+    Object.getOwnPropertyNames(value).forEach(function(key: any) {
+      error[key] = (value as any)[key]
+    })
+
+    return error
+  }
+
+  return value
+}
+
 export function processMessage(message: string | object, prefix: string = '') {
   if (typeof message === 'object') {
-    return `${prefix}${JSON.stringify(message)}`
+    return `${prefix}${JSON.stringify(message, replaceErrors)}`
   }
   return `${prefix}${message}`
 }

@@ -161,6 +161,12 @@ describe('Logging methods (except for verbose)', () => {
     const processedMessage = processMessage(testObject)
     expect(processedMessage).toEqual(JSON.stringify(testObject))
   })
+  it('Checks that an Error is stringified correctly', () => {
+    const error = new Error('This is an error')
+    const processedMessage = processMessage(error)
+    // '{}' is the default output of JSON.stringify(new Error())
+    expect(processedMessage).not.toEqual('{}')
+  })
   it('Prints an object without errors', () => {
     const testObject = { test: 'object', value: 4, valid: true }
     const logger = initLogger()
